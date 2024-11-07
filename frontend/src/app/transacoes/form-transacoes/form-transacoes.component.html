@@ -1,0 +1,54 @@
+<h2>Novas transações</h2>
+
+<p *ngIf="estaCarregandoCategorias">
+  <app-loading [loading]="estaCarregandoCategorias"></app-loading>
+</p>
+
+<div *ngIf="!estaCarregandoCategorias">
+  <div class="criar-categoria">
+    Criar nova categoria: <input type="text" [(ngModel)]="novaCategoria.nome" />
+    <button (click)="adicionarCategoria()" [disabled]="novaCategoria.nome === ''">Criar</button>
+  </div>
+
+  Categoria
+  <select [(ngModel)]="transacao.categoria">
+    <option *ngFor="let categoria of categorias" [ngValue]="categoria">{{categoria.nome}}</option>
+  </select>
+  <br />
+  Valor
+  <input type="number" [(ngModel)]="transacao.valor" class="valor"/>
+  <br />
+  Data
+  <input type="date" [(ngModel)]="transacao.data"/>
+  <br />
+  <button (click)="adicionarTransacao()">Adicionar transação</button>
+</div>
+
+
+<div *ngIf="listaTransacoes.length" class="tabela">
+  <h3>Informações a adicionar:</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Categoria</th>
+        <th>Valor</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let transacao of listaTransacoes; index as i">
+        <td>{{i + 1}}</td>
+        <td>{{transacao.categoria!.nome}}</td>
+        <td>{{transacao.valor!.toFixed(2)}}</td>
+        <td>{{transacao.data}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button (click)="salvarTransacoes()" class="salvar">Salvar modificações</button>
+</div>
+
+<p *ngIf="estaCarregando">
+  <app-loading [loading]="estaCarregando"></app-loading>
+</p>

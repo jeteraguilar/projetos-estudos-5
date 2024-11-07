@@ -1,0 +1,11 @@
+<h2>Minhas transações</h2>
+
+<p *ngIf="estaCarregando">
+  <app-loading [loading]="estaCarregando"></app-loading>
+</p>
+
+<app-tabela-transacoes
+  *ngIf="!estaCarregando && categorias.length > 0"
+  [transacoes]="transacoes"
+  [categorias]="categorias"
+  (alteracaoRegistros)="onAlteracaoRegistros()"></app-tabela-transacoes>

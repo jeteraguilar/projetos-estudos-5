@@ -1,0 +1,62 @@
+<div class="filtros">
+  Filtros
+  <br />
+  Categoria:
+  <select [(ngModel)]="filtroCategoria">
+    <option [ngValue]="todasCategorias">Todas</option>
+    <option *ngFor="let categoria of categorias" [ngValue]="categoria">{{categoria.nome}}</option>
+  </select>
+  
+  Data:
+  <select [(ngModel)]="filtroData">
+    <option [ngValue]="todasDatas">Todas</option>
+    <option *ngFor="let data of recuperarDatas()" [ngValue]="data">{{data}}</option>
+  </select>
+</div>
+
+<p *ngIf="filtrarTransacoes(transacoes).length === 0">
+  Nenhuma transação registrada.
+</p>
+
+
+<div *ngIf="filtrarTransacoes(transacoes).length > 0" class="tabela">
+  <table >
+    <thead>
+      <tr>
+        <th>Categoria</th>
+        <th>Valor</th>
+        <th>Data</th>
+        <th>Alterar</th>
+        <th>Deletar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let transacao of filtrarTransacoes(transacoes); index as i">
+        <td>
+          <ng-container *ngIf="!transacao.editando" class="categoria">{{ transacao.categoria!.nome }}</ng-container>
+          <select *ngIf="transacao.editando" [(ngModel)]="transacao.categoria">
+            <option [ngValue]="transacao.categoria">{{transacao.categoria!.nome}}</option>
+            <option *ngFor="let categoria of categorias" [ngValue]="categoria">{{categoria.nome}}</option>
+          </select>
+        </td>
+        <td>
+          <ng-container *ngIf="!transacao.editando">{{ transacao.valor!.toFixed(2) }}</ng-container>
+          <input *ngIf="transacao.editando" [(ngModel)]="transacao.valor" type="number" />
+        </td>
+        <td>
+          <ng-container *ngIf="!transacao.editando">{{ transacao.data }}</ng-container>
+          <input *ngIf="transacao.editando" [(ngModel)]="transacao.data" type="date" />
+        </td>
+        <td>
+          <button *ngIf="!transacao.editando" (click)="transacao.editando = true">Alterar</button>
+          <button *ngIf="transacao.editando" (click)="atualizarTransacao(transacao)">Salvar</button>
+        </td>
+        <td><button (click)="deletarTransacao(transacao.id)">X</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button (click)="deletarTodasTransacoes()" class="limpar" *ngIf="filtroCategoria === todasCategorias && filtroData === todasDatas">Limpar todos os registros</button>
+
+  <p>Saldo: {{ calcularSaldo(filtrarTransacoes(transacoes)).toFixed(2)}}</p>
+</div>
